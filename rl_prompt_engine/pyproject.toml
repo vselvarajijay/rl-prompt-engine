@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "rl-prompt-engine"
+version = "0.1.0"
+description = "A reinforcement learning-powered system for generating prompt templates for appointment booking conversations"
+authors = ["Vijay Selvaraj <vijay.selvaraj@gmail.com>"]
+readme = "README.md"
+packages = [{include = "rl_prompt_engine"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+gymnasium = "^0.29.1"
+stable-baselines3 = "^2.3.0"
+numpy = "^1.26.0"
+tqdm = "^4.66.0"
+openai = "^1.0.0"
+python-dotenv = "^1.0.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0.0"
+black = "^23.0.0"
+flake8 = "^6.0.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
