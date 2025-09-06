@@ -2,43 +2,47 @@
 RL Prompt Engine
 
 A reinforcement learning-powered system for generating prompt templates
-for appointment booking conversations.
+for any use case. Fully configurable and generic.
 
 Core Components:
-- MetaPromptingSystem: Main system class
-- AppointmentPromptEnv: RL environment
-- AppointmentPromptGenerator: Template generator
-- AppointmentPromptDatabase: Template storage
+- PromptSystem: Main system class
+- PromptEnv: RL environment
+- PromptGenerator: Template generator
+- PromptTemplate: Template representation
 
 Usage:
-    from rl_prompt_engine import MetaPromptingSystem
+    from rl_prompt_engine import PromptSystem
     
     # Create system
-    system = MetaPromptingSystem()
+    system = PromptSystem(config_file="configs/generic_config.json")
     
     # Train model
     system.train(total_timesteps=10000)
     
     # Generate template
-    template = system.generate_prompt_template(
-        customer_type=0,  # cautious
-        conversation_stage=0,  # early
+    template = system.generate_template(
+        context_type=0,  # new_customer
+        conversation_stage=0,  # opening
         urgency_level=0  # low
     )
 """
 
-from .core.meta_prompting import MetaPromptingSystem, create_system, train_system
-from .core.appointment_prompt_env import AppointmentPromptEnv
-from .core.appointment_prompt_generator import AppointmentPromptGenerator, AppointmentPromptDatabase
+from .core.prompt_system import PromptSystem, create_system, train_system
+from .core.prompt_env import PromptEnv
+from .core.prompt_generator import PromptGenerator, PromptTemplate
+from .core.config_generator import ConfigGenerator, create_config_from_prompt, create_config_from_examples
 
-__version__ = "0.1.0"
+__version__ = "2.0.0"
 __author__ = "Vijay Selvaraj"
 
 __all__ = [
-    "MetaPromptingSystem",
+    "PromptSystem",
     "create_system", 
     "train_system",
-    "AppointmentPromptEnv",
-    "AppointmentPromptGenerator",
-    "AppointmentPromptDatabase"
+    "PromptEnv",
+    "PromptGenerator",
+    "PromptTemplate",
+    "ConfigGenerator",
+    "create_config_from_prompt",
+    "create_config_from_examples"
 ]

@@ -61,6 +61,21 @@ logs/
 *.pkl
 *.joblib
 
+# Generated configurations and models
+configs/
+models/
+*_config.json
+generated_config.json
+luxury_config.json
+saas_config.json
+fitness_config.json
+real_estate_config.json
+
+# Generated templates
+template.txt
+templates.json
+demo_templates.json
+
 # Jupyter Notebook
 .ipynb_checkpoints
 
