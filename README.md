@@ -13,25 +13,43 @@ This AI learns to have conversations with potential car buyers and convince them
 pip install -r requirements.txt
 ```
 
-### 2. Quick Test
-```bash
-cd salesgym/src
-python smoke_test.py    # verify everything works
-```
-
-### 3. Train the AI
+### 2. Train the AI
 ```bash
 cd salesgym/src
 python train.py
-# Optional: N_ENVS=16 TOTAL_STEPS=800000 python train.py
 ```
 
-### 4. Test the AI
+### 3. Watch the AI in Action! 🎭
 ```bash
 cd salesgym/src
-python eval.py                    # prints win rate over 500 episodes
-python eval.py --episodes 1000   # custom number of episodes
-python eval.py --help            # see all options
+python conversation_simulator.py
+```
+
+### 4. Easy Business Interface
+```bash
+cd salesgym/src
+python business_interface.py
+```
+
+## 🎭 What You'll See
+
+The AI will have **real conversations** like this:
+
+```
+👤 Customer: Cautious Buyer
+📊 Initial State: Interest=0.35, Trust=0.25, Commitment=0.20
+
+🤖 AI: Hi! I'm calling about the car you're interested in. How are you doing today?
+📊 Customer State: Interest=0.45, Trust=0.35, Commitment=0.24
+
+🤖 AI: What kind of vehicle are you looking for?
+📊 Customer State: Interest=0.52, Trust=0.40, Commitment=0.26
+
+🤖 AI: I can get you a great deal on this vehicle. Let me see what discounts I can apply.
+📊 Customer State: Interest=0.58, Trust=0.44, Commitment=0.34
+
+🤖 AI: Would you like to schedule a test drive? I have some time slots available.
+✅ SUCCESS: Customer booked an appointment!
 ```
 
 ## ⚙️ Easy Configuration
