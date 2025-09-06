@@ -2,18 +2,18 @@
 Core modules for RL Prompt Engine
 """
 
-from .meta_prompting import MetaPromptingSystem, create_system, train_system
-from .appointment_prompt_env import AppointmentPromptEnv
-from .appointment_prompt_generator import AppointmentPromptGenerator, AppointmentPromptDatabase
+from .prompt_system import PromptSystem, create_system, train_system
+from .prompt_env import PromptEnv
+from .prompt_generator import PromptGenerator, PromptTemplate
 from .config_generator import ConfigGenerator, create_config_from_prompt, create_config_from_examples
 
 __all__ = [
-    "MetaPromptingSystem",
+    "PromptSystem",
     "create_system", 
     "train_system",
-    "AppointmentPromptEnv",
-    "AppointmentPromptGenerator",
-    "AppointmentPromptDatabase",
+    "PromptEnv",
+    "PromptGenerator",
+    "PromptTemplate",
     "ConfigGenerator",
     "create_config_from_prompt",
     "create_config_from_examples"
