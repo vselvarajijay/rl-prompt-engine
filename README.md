@@ -1,150 +1,179 @@
-# 🚗 Automotive Appointment Booking AI
+# 🤖 RL Prompt Engine
 
-An intelligent AI system that learns to book appointments with potential car buyers using reinforcement learning.
+A **generic, configurable** reinforcement learning-powered system for generating dynamic prompt templates for **any use case**. The system uses PPO (Proximal Policy Optimization) to learn optimal prompt strategies based on context types, conversation stages, and urgency levels.
 
 ## 🎯 What This Does
 
-This AI learns to have conversations with potential car buyers and convince them to book appointments at your dealership. It learns through trial and error, getting better over time.
+This AI learns to generate optimal prompts for any business conversation by understanding context and adapting its approach. It learns through trial and error, getting better over time at creating effective prompts for different scenarios.
 
 ## 🚀 Quick Start
 
-### 1. Install Dependencies
+### 1. Installation
 ```bash
-pip install -r requirements.txt
+cd rl_prompt_engine
+poetry install
 ```
 
-### 2. Train the AI
+### 2. Train a Model
 ```bash
-cd salesgym/src
-python train.py
+# Train with default configuration
+poetry run python -m rl_prompt_engine.cli_simple train --timesteps 2000 --save-path models/demo_model
 ```
 
-### 3. Watch the AI in Action! 🎭
+### 3. Generate Prompts
 ```bash
-cd salesgym/src
-python conversation_simulator.py
+# Generate a prompt for new customers
+poetry run python -m rl_prompt_engine.cli_simple generate \
+  --model-path models/demo_model \
+  --context-type 0 \
+  --conversation-stage 0 \
+  --urgency-level 0 \
+  --output new_customer_greeting.txt
 ```
 
-### 4. Easy Business Interface
-```bash
-cd salesgym/src
-python business_interface.py
-```
+### 4. Use with Any LLM
+Copy the generated prompt and use it with ChatGPT, Claude, or any other LLM to create personalized messages.
 
 ## 🎭 What You'll See
 
-The AI will have **real conversations** like this:
+The AI will generate **context-aware prompts** like this:
 
 ```
-👤 Customer: Cautious Buyer
-📊 Initial State: Interest=0.35, Trust=0.25, Commitment=0.20
+🎯 Context: New Customer, Opening Stage, Low Urgency
 
-🤖 AI: Hi! I'm calling about the car you're interested in. How are you doing today?
-📊 Customer State: Interest=0.45, Trust=0.35, Commitment=0.24
+📝 Generated Meta-Prompt:
+You are an AI assistant for new_customer customers. Generate a message with the following specifications:
 
-🤖 AI: What kind of vehicle are you looking for?
-📊 Customer State: Interest=0.52, Trust=0.40, Commitment=0.26
+CUSTOMER PROFILE:
+- Context Type: new_customer
+- Conversation Stage: opening
+- Urgency Level: low
+- Description: A new customer who has never used our service before
 
-🤖 AI: I can get you a great deal on this vehicle. Let me see what discounts I can apply.
-📊 Customer State: Interest=0.58, Trust=0.44, Commitment=0.34
+TONE AND APPROACH:
+- Tone: Friendly, patient, reassuring
+- Approach: Educate about the product, provide guidance and assurance
+- Time Reference: when convenient
 
-🤖 AI: Would you like to schedule a test drive? I have some time slots available.
-✅ SUCCESS: Customer booked an appointment!
+MESSAGE TEMPLATE:
+We're offering special offer for when convenient
+
+PARAMETERS TO FILL:
+- first_name: Customer's first name
+- product: Specific product/service they're interested in
+- company_name: Name of your company
+- benefit: Main benefit of the product/service
+
+INSTRUCTIONS:
+1. Fill in all parameters with appropriate values
+2. Use the Friendly, patient, reassuring tone throughout
+3. Incorporate all template parts in a natural flow
+4. Keep the message conversational and professional
+5. End with a clear call-to-action
+
+Generate a complete message that follows this template and incorporates all specified elements.
 ```
 
 ## ⚙️ Easy Configuration
 
-You can customize the AI's behavior by editing `config.json`. No coding required!
+You can customize the AI's behavior by editing JSON configuration files. No coding required!
 
-### Customer Psychology Settings
+### Context Types
 
-Adjust how customers behave:
+Define different user personas:
 
 ```json
 {
-  "customer_psychology": {
-    "interest": {
-      "description": "How interested the customer is in buying a car",
-      "ready_threshold": 0.5
+  "context_types": {
+    "new_customer": {
+      "description": "A new customer who has never used our service before",
+      "tone": "Friendly, patient, reassuring",
+      "approach": "Educate about the product, provide guidance and assurance",
+      "preferred_components": ["greeting", "needs_assessment", "reassurance"]
     },
-    "trust": {
-      "description": "How much the customer trusts the dealership", 
-      "ready_threshold": 0.5
+    "premium_customer": {
+      "description": "A customer who values quality and is less price-sensitive",
+      "tone": "Professional, sophisticated, exclusive",
+      "approach": "Emphasize quality, exclusivity, and premium features",
+      "preferred_components": ["value_proposition", "social_proof", "call_to_action"]
     }
   }
 }
 ```
 
-### Sales Actions
+### Prompt Components
 
-Customize how each sales tactic affects customers:
+Customize how each prompt component works:
 
 ```json
 {
-  "sales_actions": {
-    "rapport": {
-      "description": "Build relationship and trust with customer",
-      "effects": {
-        "interest": 0.10,
-        "trust": 0.06,
-        "commitment": 0.03
-      }
+  "prompt_components": {
+    "greeting": {
+      "description": "Initial greeting to the customer",
+      "template": "Hello {first_name}, how can we assist you today?",
+      "effectiveness": 0.9
+    },
+    "value_proposition": {
+      "description": "Presenting the value proposition",
+      "template": "By choosing {product}, you'll benefit from {benefit}",
+      "effectiveness": 0.8
     }
   }
 }
 ```
 
-### Customer Types
+### Conversation Stages
 
-Define different types of customers:
+Define different stages of interaction:
 
 ```json
 {
-  "customer_types": {
-    "type_0": {
-      "name": "Cautious Buyer",
-      "description": "Takes time to decide, needs lots of information",
-      "base_psychology": {
-        "interest": 0.30,
-        "trust": 0.25,
-        "commitment": 0.20
-      }
+  "conversation_stages": {
+    "opening": {
+      "description": "Initial contact with the customer",
+      "goals": ["Establish rapport", "Identify customer type"],
+      "preferred_components": ["greeting", "needs_assessment"]
+    },
+    "closing": {
+      "description": "Finalizing the deal",
+      "goals": ["Close the deal", "Ensure satisfaction"],
+      "preferred_components": ["call_to_action", "urgency_creation"]
     }
   }
 }
 ```
 
-## 🎭 Sales Actions Explained
+## 🎭 Prompt Components Explained
 
-| Action | What It Does | Best For |
+| Component | What It Does | Best For |
 |--------|-------------|----------|
-| **Rapport** | Builds relationship and trust | Starting conversations |
-| **Qualify** | Learns about customer needs | Understanding what they want |
-| **Show Inventory** | Shows available cars | When they're interested |
-| **Handle Concerns** | Addresses price/reliability worries | When they're hesitant |
-| **Create Urgency** | Creates time pressure | When they're ready but slow |
-| **Social Proof** | Shows others bought and are happy | Building confidence |
-| **Offer Incentives** | Offers special deals/financing | Closing the deal |
-| **Book Appointment** | Tries to book the appointment | When they're ready |
+| **Greeting** | Establishes initial connection | Starting conversations |
+| **Needs Assessment** | Learns about user requirements | Understanding what they want |
+| **Value Proposition** | Presents key benefits | When they're interested |
+| **Handle Concerns** | Addresses objections and worries | When they're hesitant |
+| **Urgency Creation** | Creates time pressure | When they're ready but slow |
+| **Social Proof** | Shows others' success stories | Building confidence |
+| **Incentive Offering** | Presents special offers | Closing the deal |
+| **Call to Action** | Encourages next steps | When they're ready |
 
 ## 📊 Understanding Results
 
 ### Training Results
-- **Win Rate**: Percentage of successful appointments booked
-- **Action Distribution**: Which tactics the AI uses most often
+- **Success Rate**: Percentage of effective prompts generated
+- **Component Distribution**: Which prompt components the AI uses most often
 
 ### Example Output
 ```
-Win rate over 500 episodes: 0.982
+Success rate over 500 episodes: 0.982
 
-Action distribution:
-  Action 0:  366 (  8.2%)  # Rapport
-  Action 1:  298 (  6.7%)  # Qualify  
-  Action 2:  466 ( 10.4%)  # Show Inventory
-  Action 3:  365 (  8.2%)  # Handle Concerns
-  Action 5:  798 ( 17.9%)  # Social Proof
-  Action 6: 1833 ( 41.1%)  # Offer Incentives
-  Action 7:  334 (  7.5%)  # Book Appointment
+Component distribution:
+  Component 0:  366 (  8.2%)  # Greeting
+  Component 1:  298 (  6.7%)  # Needs Assessment  
+  Component 2:  466 ( 10.4%)  # Value Proposition
+  Component 3:  365 (  8.2%)  # Handle Concerns
+  Component 5:  798 ( 17.9%)  # Social Proof
+  Component 6: 1833 ( 41.1%)  # Incentive Offering
+  Component 7:  334 (  7.5%)  # Call to Action
 ```
 
 ## 🔧 Advanced Configuration
@@ -198,20 +227,25 @@ To make an action more effective, increase its values:
 
 ## 🎯 Business Use Cases
 
-### 1. **Training Sales Staff**
-- Show them which tactics work best
-- Practice with different customer types
-- Learn optimal conversation flow
+### 1. **Sales & Marketing**
+- Generate personalized sales messages
+- Create targeted email campaigns
+- Optimize lead generation prompts
 
-### 2. **A/B Testing Sales Strategies**
-- Test different action effects
-- Compare success rates
-- Optimize for your specific market
+### 2. **Customer Support**
+- Generate context-aware support responses
+- Create escalation prompts
+- Improve customer satisfaction
 
-### 3. **Customer Segmentation**
-- Understand different customer types
-- Tailor approaches for each segment
-- Improve conversion rates
+### 3. **Content Creation**
+- Generate marketing copy
+- Create social media content
+- Develop educational materials
+
+### 4. **User Onboarding**
+- Generate welcome sequences
+- Create tutorial prompts
+- Improve user engagement
 
 ## 📈 Performance Tips
 
@@ -256,33 +290,40 @@ To make an action more effective, increase its values:
 ## 📁 File Structure
 
 ```
-salesgym/
-├── src/
-│   ├── purchase_env.py      # Main environment
-│   ├── config.py            # Configuration system
-│   ├── train.py             # Training script
-│   ├── eval.py              # Evaluation script
-│   ├── smoke_test.py        # Test script
-│   └── config.json          # Configuration file
-├── requirements.txt         # Dependencies
-└── README.md               # This file
+rl_prompt_engine/
+├── rl_prompt_engine/           # Main package
+│   ├── cli_simple.py          # Simplified command line interface
+│   ├── core/                   # Core functionality
+│   │   ├── prompt_system.py   # Main RL system class
+│   │   ├── prompt_env.py      # Generic RL environment
+│   │   ├── prompt_generator.py # Template generation
+│   │   ├── config_generator.py # AI-powered config generation
+│   │   ├── logging_config.py   # Logging setup
+│   │   └── training_callback.py # Training callbacks
+│   └── config/                 # Default configurations
+├── configs/                    # Configuration files
+│   ├── generic_config.json    # Generic configuration
+│   ├── luxury_config.json     # Luxury car sales example
+│   └── my_custom_config.json  # Your custom config
+├── models/                     # Trained RL models
+└── README.md                   # This file
 ```
 
 ## 🔧 Technical Notes
 
 ### Environment Details
-- **Environment**: `AutomotiveAppointmentEnv` with discrete actions (sales tactics) and customer psychology features
-- **Reward**: Sparse reward - only at episode end (1 if appointment booked, 0 otherwise)
-- **Actions**: 8 different sales tactics (rapport, qualify, show_inventory, etc.)
-- **Customer Features**: 5 psychological traits (interest, urgency, availability, trust, commitment)
+- **Environment**: `PromptEnv` with discrete actions (prompt components) and context features
+- **Reward**: Sparse reward - only at episode end (1 if effective prompt generated, 0 otherwise)
+- **Actions**: 8 different prompt components (greeting, needs_assessment, value_proposition, etc.)
+- **Context Features**: 5 contextual traits (context_type, conversation_stage, urgency_level, component_history, effectiveness)
 
 ### Customization
-- Tune `action_effects` in `config.json` to shape task difficulty
-- Adjust customer psychology thresholds for different markets
-- Modify persona priors for different customer segments
+- Tune `component_effectiveness` in config files to shape task difficulty
+- Adjust context type thresholds for different markets
+- Modify conversation stage preferences for different use cases
 
 ## 🎉 Success!
 
-Your AI is now ready to learn how to book automotive appointments! The system will automatically adapt to your configuration and get better over time.
+Your RL Prompt Engine is now ready to generate optimal prompts for any business scenario! The system will automatically adapt to your configuration and get better over time.
 
-Remember: The AI learns through trial and error, so the more you train it, the better it gets!
+Remember: The AI learns through trial and error, so the more you train it, the better it gets at generating effective prompts!
