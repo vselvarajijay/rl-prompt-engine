@@ -28,7 +28,7 @@ class PromptEnv(gym.Env):
     
     metadata = {"render_modes": []}
     
-    def __init__(self, config_file: str = "configs/default_config.json"):
+    def __init__(self, config_file: str = "configs/generic_config.json"):
         super().__init__()
         
         # Load configuration
@@ -41,8 +41,8 @@ class PromptEnv(gym.Env):
         self.urgency_levels = list(self.config["urgency_levels"].keys())
         
         # Environment parameters
-        self.max_prompt_length = self.config.get("max_prompt_length", 6)
-        self.max_turns = self.config.get("max_turns", 10)
+        self.max_prompt_length = self.config["max_prompt_length"]
+        self.max_turns = self.config["max_turns"]
         
         # State variables
         self.selected_components = []
@@ -53,13 +53,13 @@ class PromptEnv(gym.Env):
         
         # Define action and observation spaces
         self.action_space = spaces.Discrete(len(self.prompt_components) + 1)  # +1 for finish action
-        self.observation_space = spaces.Dict({
-            "context_type": spaces.Discrete(len(self.context_types)),
-            "conversation_stage": spaces.Discrete(len(self.conversation_stages)),
-            "urgency_level": spaces.Discrete(len(self.urgency_levels)),
-            "selected_components": spaces.MultiBinary(len(self.prompt_components)),
-            "turn": spaces.Box(0, self.max_turns, shape=(1,), dtype=np.float32)
-        })
+        
+        # For Stable Baselines3 compatibility, we need to flatten the observation
+        # Total observation size: context_type + conversation_stage + urgency_level + selected_components + turn
+        obs_size = 1 + 1 + 1 + len(self.prompt_components) + 1
+        self.observation_space = spaces.Box(
+            low=0, high=1, shape=(obs_size,), dtype=np.float32
+        )
     
     def _load_config(self, config_file: str) -> Dict[str, Any]:
         """Load configuration from JSON file."""
@@ -70,7 +70,7 @@ class PromptEnv(gym.Env):
         with open(config_path, 'r') as f:
             return json.load(f)
     
-    def reset(self, seed: Optional[int] = None, options: Optional[Dict] = None) -> Tuple[Dict, Dict]:
+    def reset(self, seed: Optional[int] = None, options: Optional[Dict] = None) -> Tuple[np.ndarray, Dict]:
         """Reset the environment to initial state."""
         super().reset(seed=seed)
         
@@ -96,7 +96,7 @@ class PromptEnv(gym.Env):
         
         return self._get_observation(), {}
     
-    def step(self, action: int) -> Tuple[Dict, float, bool, bool, Dict]:
+    def step(self, action: int) -> Tuple[np.ndarray, float, bool, bool, Dict]:
         """Execute one step in the environment."""
         self.turn += 1
         
@@ -137,19 +137,28 @@ class PromptEnv(gym.Env):
         
         return self._get_observation(), reward, terminated, False, info
     
-    def _get_observation(self) -> Dict[str, np.ndarray]:
-        """Get current observation."""
+    def _get_observation(self) -> np.ndarray:
+        """Get current observation as flattened array for Stable Baselines3."""
         selected_binary = np.zeros(len(self.prompt_components), dtype=np.float32)
         for idx in self.selected_components:
             selected_binary[idx] = 1.0
         
-        return {
-            "context_type": np.array([self.current_context_type], dtype=np.int32),
-            "conversation_stage": np.array([self.current_conversation_stage], dtype=np.int32),
-            "urgency_level": np.array([self.current_urgency_level], dtype=np.int32),
-            "selected_components": selected_binary,
-            "turn": np.array([self.turn], dtype=np.float32)
-        }
+        # Normalize context values to [0, 1] range
+        context_type_norm = self.current_context_type / max(1, len(self.context_types) - 1)
+        conversation_stage_norm = self.current_conversation_stage / max(1, len(self.conversation_stages) - 1)
+        urgency_level_norm = self.current_urgency_level / max(1, len(self.urgency_levels) - 1)
+        turn_norm = self.turn / self.max_turns
+        
+        # Flatten all observations into a single array
+        obs = np.concatenate([
+            [context_type_norm],
+            [conversation_stage_norm], 
+            [urgency_level_norm],
+            selected_binary,
+            [turn_norm]
+        ], dtype=np.float32)
+        
+        return obs
     
     def _calculate_component_reward(self, component_idx: int) -> float:
         """Calculate reward for selecting a specific component."""
@@ -157,24 +166,24 @@ class PromptEnv(gym.Env):
         component_config = self.config["prompt_components"][component_name]
         
         # Base effectiveness
-        effectiveness = component_config.get("effectiveness", 0.5)
+        effectiveness = component_config["effectiveness"]
         
         # Context type bonus
         context_type_name = self.context_types[self.current_context_type]
         context_config = self.config["context_types"][context_type_name]
-        if component_name in context_config.get("preferred_components", []):
+        if component_name in context_config["preferred_components"]:
             effectiveness *= 1.2  # 20% bonus
         
         # Stage bonus
         stage_name = self.conversation_stages[self.current_conversation_stage]
         stage_config = self.config["conversation_stages"][stage_name]
-        if component_name in stage_config.get("preferred_components", []):
+        if component_name in stage_config["preferred_components"]:
             effectiveness *= 1.1  # 10% bonus
         
         # Urgency bonus
         urgency_name = self.urgency_levels[self.current_urgency_level]
         urgency_config = self.config["urgency_levels"][urgency_name]
-        if urgency_name == "high" and component_name in urgency_config.get("preferred_components", []):
+        if urgency_name == "high" and component_name in urgency_config["preferred_components"]:
             effectiveness *= 1.15  # 15% bonus
         
         return effectiveness * 0.1  # Scale down for step rewards
@@ -189,7 +198,7 @@ class PromptEnv(gym.Env):
         for component_idx in self.selected_components:
             component_name = self.prompt_components[component_idx]
             component_config = self.config["prompt_components"][component_name]
-            total_effectiveness += component_config.get("effectiveness", 0.5)
+            total_effectiveness += component_config["effectiveness"]
         
         avg_effectiveness = total_effectiveness / len(self.selected_components)
         
@@ -215,8 +224,8 @@ class PromptEnv(gym.Env):
         context_config = self.config["context_types"][context_type_name]
         stage_config = self.config["conversation_stages"][stage_name]
         
-        preferred_components = set(context_config.get("preferred_components", [])) | \
-                             set(stage_config.get("preferred_components", []))
+        preferred_components = set(context_config["preferred_components"]) | \
+                             set(stage_config["preferred_components"])
         
         selected_component_names = [self.prompt_components[i] for i in self.selected_components]
         matching_components = set(selected_component_names) & preferred_components

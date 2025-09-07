@@ -1,3 +1,8 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
 # Python
 __pycache__/
 *.py[cod]
@@ -22,13 +27,14 @@ wheels/
 MANIFEST
 
 # Virtual environments
-.env
-.venv
-env/
+.venv/
 venv/
 ENV/
-env.bak/
-venv.bak/
+env/
+.venv
+
+# Poetry
+poetry.lock
 
 # IDE
 .vscode/
@@ -46,32 +52,39 @@ venv.bak/
 ehthumbs.db
 Thumbs.db
 
-# RL Training
+# Logs
+logs/
+*.log
+
+# Model files
 *.zip
 *.pkl
 *.joblib
+
+# Generated configurations and models
+configs/
 models/
-logs/
-tensorboard_logs/
+*_config.json
+generated_config.json
+luxury_config.json
+saas_config.json
+fitness_config.json
+real_estate_config.json
 
-# Configuration (keep default, ignore custom)
-config_custom.json
-config_local.json
+# Generated templates
+template.txt
+templates.json
+demo_templates.json
 
-# Data (keep default, ignore generated)
-data/
-*.csv
-# Ignore JSON files except configs
-*.json
-!rl_prompt_engine/configs/*.json
+# Jupyter Notebook
+.ipynb_checkpoints
 
-# Jupyter
-.ipynb_checkpoints/
-
-# Testing
+# pytest
 .pytest_cache/
 .coverage
 htmlcov/
 
-# Documentation
-docs/_build/
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
