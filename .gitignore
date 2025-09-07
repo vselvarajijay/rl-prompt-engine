@@ -61,8 +61,8 @@ config_local.json
 # Data (keep default, ignore generated)
 data/
 *.csv
+# Ignore JSON files except configs
 *.json
-!config.json
 !rl_prompt_engine/configs/*.json
 
 # Jupyter
