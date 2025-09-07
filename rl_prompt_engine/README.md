@@ -9,6 +9,7 @@ A **generic, configurable** reinforcement learning-powered system for generating
 - ⚙️ **Config-Driven**: Everything controlled by JSON configuration files
 - 🚀 **Easy to Use**: Simple CLI and Python API
 - 🔧 **No Hardcoded Logic**: Completely customizable via config
+- 🤖 **RL-Powered**: Uses PPO to learn optimal prompt strategies
 
 ## 🚀 Quick Start
 
@@ -19,46 +20,138 @@ cd rl_prompt_engine
 poetry install
 ```
 
-### 2. Environment Setup
+### 2. Complete Example: Train & Generate
 
+Here's a complete example showing how to train a model and generate prompts:
+
+#### Step 1: Train a Model
 ```bash
-# Copy environment template (optional - only needed for AI config generation)
-cp env.template .env
-
-# Edit .env and add your OpenAI API key (optional)
-OPENAI_API_KEY=your_api_key_here
+# Train with default configuration (appointment booking)
+poetry run python -m rl_prompt_engine.cli_simple train --timesteps 2000 --save-path models/demo_model
 ```
 
-### 3. Train a Model
-
-```bash
-# Train with generic configuration
-poetry run python -m rl_prompt_engine.cli_simple train --timesteps 5000
-
-# Train with custom configuration
-poetry run python -m rl_prompt_engine.cli_simple train --config configs/my_custom_config.json --timesteps 5000
+**Output:**
+```
+🚀 Training RL model...
+Eval num_timesteps=1000, episode_reward=0.64 +/- 0.24
+Episode length: 8.40 +/- 3.20
+✅ Training completed. Model saved as models/demo_model
 ```
 
-### 4. Generate Prompt Templates
-
+#### Step 2: List Available Options
 ```bash
-# List available options
+# See what context types, stages, and components are available
 poetry run python -m rl_prompt_engine.cli_simple list
+```
 
-# Generate a single template
+**Output:**
+```
+🎯 Context Types:
+  0: new_customer
+  1: returning_customer
+  2: price_sensitive
+  3: premium_customer
+  4: urgent_customer
+  5: skeptical_customer
+
+📈 Conversation Stages:
+  0: opening
+  1: exploration
+  2: presentation
+  3: negotiation
+  4: closing
+  5: follow_up
+
+⚡ Urgency Levels:
+  0: low
+  1: medium
+  2: high
+```
+
+#### Step 3: Generate Prompts
+```bash
+# Generate a greeting for new customers
 poetry run python -m rl_prompt_engine.cli_simple generate \
+  --model-path models/demo_model \
   --context-type 0 \
   --conversation-stage 0 \
   --urgency-level 0 \
-  --output my_template.txt
+  --output new_customer_greeting.txt
 
-# Generate with custom model
+# Generate a closing for premium customers
 poetry run python -m rl_prompt_engine.cli_simple generate \
-  --model-path models/ppo_prompt_system \
-  --context-type 2 \
-  --conversation-stage 3 \
+  --model-path models/demo_model \
+  --context-type 3 \
+  --conversation-stage 4 \
   --urgency-level 2 \
   --output premium_customer_closing.txt
+```
+
+**Generated Prompt Example:**
+```
+You are an AI assistant for new_customer customers. Generate a message with the following specifications:
+
+CUSTOMER PROFILE:
+- Context Type: new_customer
+- Conversation Stage: opening
+- Urgency Level: low
+- Description: A new customer who has never used our service before
+
+TONE AND APPROACH:
+- Tone: Friendly, patient, reassuring
+- Approach: Educate about the product, provide guidance and assurance
+- Time Reference: when convenient
+
+MESSAGE TEMPLATE:
+We're offering special offer for when convenient
+
+PARAMETERS TO FILL:
+- first_name: Customer's first name
+- product: Specific product/service they're interested in
+- company_name: Name of your company
+- budget: Customer's budget range
+- timeline: When they need the solution
+- benefit: Main benefit of the product/service
+- rate: Special rate or offer
+- incentive: Special offer or incentive
+- concern: Specific concern to address
+- time_reference: When to schedule (e.g., today, this week, when convenient)
+
+INSTRUCTIONS:
+1. Fill in all parameters with appropriate values
+2. Use the Friendly, patient, reassuring tone throughout
+3. Incorporate all template parts in a natural flow
+4. Keep the message conversational and professional
+5. End with a clear call-to-action
+6. Make it sound like a real conversation
+
+Generate a complete message that follows this template and incorporates all specified elements.
+```
+
+#### What You Get
+The generated prompts are **meta-prompts** that you can use with any LLM (ChatGPT, Claude, etc.) to generate actual customer messages. The RL agent learns to combine the right prompt components for each specific context.
+
+**Example Usage with ChatGPT:**
+1. Copy the generated prompt
+2. Paste it into ChatGPT with your specific parameters
+3. Get a personalized message for your customer
+
+### 3. Alternative: Use Different Configurations
+
+```bash
+# Train with luxury car sales configuration
+poetry run python -m rl_prompt_engine.cli_simple train \
+  --config configs/luxury_config.json \
+  --timesteps 5000 \
+  --save-path models/luxury_model
+
+# Generate with luxury model
+poetry run python -m rl_prompt_engine.cli_simple generate \
+  --model-path models/luxury_model \
+  --context-type 0 \
+  --conversation-stage 0 \
+  --urgency-level 0 \
+  --output luxury_greeting.txt
 ```
 
 ## 🎯 Features
