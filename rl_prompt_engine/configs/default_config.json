@@ -1,0 +1,199 @@
+{
+  "customer_types": {
+    "new_customer": {
+      "description": "A customer who has never used the service before",
+      "characteristics": [
+        "unfamiliar",
+        "curious",
+        "cautious"
+      ],
+      "approach": "Educate about the service, build trust",
+      "tone": "Friendly, informative"
+    },
+    "repeat_customer": {
+      "description": "A customer who has used the service before and is familiar with the process",
+      "characteristics": [
+        "familiar",
+        "comfortable",
+        "trusting"
+      ],
+      "approach": "Reinforce benefits, offer loyalty rewards",
+      "tone": "Friendly, appreciative"
+    },
+    "urgent_customer": {
+      "description": "A customer who needs the service urgently",
+      "characteristics": [
+        "anxious",
+        "impatient",
+        "demanding"
+      ],
+      "approach": "Offer immediate solutions, prioritize booking",
+      "tone": "Reassuring, prompt"
+    },
+    "budget_customer": {
+      "description": "A customer who is price-sensitive",
+      "characteristics": [
+        "cautious",
+        "value-seeking",
+        "negotiating"
+      ],
+      "approach": "Highlight value, offer discounts",
+      "tone": "Understanding, accommodating"
+    },
+    "luxury_customer": {
+      "description": "A customer who seeks premium services",
+      "characteristics": [
+        "demanding",
+        "quality-conscious",
+        "affluent"
+      ],
+      "approach": "Highlight quality, offer premium options",
+      "tone": "Professional, respectful"
+    },
+    "corporate_customer": {
+      "description": "A customer booking for a business or corporate event",
+      "characteristics": [
+        "professional",
+        "time-conscious",
+        "detail-oriented"
+      ],
+      "approach": "Offer tailored solutions, prioritize efficiency",
+      "tone": "Professional, efficient"
+    }
+  },
+  "conversation_stages": {
+    "greeting": {
+      "description": "Initial contact with the customer",
+      "goals": [
+        "Establish rapport",
+        "Identify customer type"
+      ],
+      "approach": "Friendly, open-ended questions"
+    },
+    "needs_assessment": {
+      "description": "Understanding the customer's needs and preferences",
+      "goals": [
+        "Identify service requirements",
+        "Assess urgency level"
+      ],
+      "approach": "Active listening, probing questions"
+    },
+    "solution_proposal": {
+      "description": "Proposing a suitable appointment or service",
+      "goals": [
+        "Match service to needs",
+        "Propose appointment times"
+      ],
+      "approach": "Informative, persuasive"
+    },
+    "closing": {
+      "description": "Finalizing the appointment booking",
+      "goals": [
+        "Confirm appointment",
+        "Ensure customer satisfaction"
+      ],
+      "approach": "Confirmatory, appreciative"
+    }
+  },
+  "prompt_components": {
+    "greeting": {
+      "description": "Opening the conversation",
+      "template": "Hello {customer_name}, how can I assist you today?",
+      "use_case": "Start of conversation",
+      "effectiveness": 0.9
+    },
+    "needs_assessment": {
+      "description": "Understanding customer needs",
+      "template": "Could you please tell me more about what you're looking for?",
+      "use_case": "Needs assessment stage",
+      "effectiveness": 0.8
+    },
+    "appointment_proposal": {
+      "description": "Proposing an appointment",
+      "template": "We have an available slot on {date} at {time}. Would that work for you?",
+      "use_case": "Solution proposal stage",
+      "effectiveness": 0.85
+    },
+    "appointment_confirmation": {
+      "description": "Confirming the appointment",
+      "template": "Great, I've booked your appointment for {date} at {time}.",
+      "use_case": "Closing stage",
+      "effectiveness": 0.95
+    },
+    "rescheduling_proposal": {
+      "description": "Proposing a reschedule",
+      "template": "I'm sorry for the inconvenience. Can we reschedule your appointment to {date} at {time}?",
+      "use_case": "When original appointment can't be met",
+      "effectiveness": 0.8
+    },
+    "discount_offer": {
+      "description": "Offering a discount",
+      "template": "As a valued customer, we'd like to offer you a {discount}% discount on your next booking.",
+      "use_case": "When dealing with repeat or budget customers",
+      "effectiveness": 0.75
+    },
+    "premium_option": {
+      "description": "Offering a premium service",
+      "template": "We also offer a premium service which includes {premium_features}. Would you be interested in that?",
+      "use_case": "When dealing with luxury customers",
+      "effectiveness": 0.7
+    },
+    "immediate_solution": {
+      "description": "Offering an immediate solution",
+      "template": "We can arrange a service for you right away. Would that be suitable?",
+      "use_case": "When dealing with urgent customers",
+      "effectiveness": 0.85
+    },
+    "loyalty_rewards": {
+      "description": "Offering loyalty rewards",
+      "template": "As a thank you for your loyalty, we'd like to offer you {reward}.",
+      "use_case": "When dealing with repeat customers",
+      "effectiveness": 0.8
+    },
+    "tailored_solution": {
+      "description": "Offering a tailored solution",
+      "template": "We can offer a tailored solution to meet your business needs. Would you like to discuss this further?",
+      "use_case": "When dealing with corporate customers",
+      "effectiveness": 0.8
+    }
+  },
+  "urgency_levels": {
+    "low": {
+      "description": "Low urgency scenario",
+      "time_reference": "when convenient",
+      "approach": "Patient, no pressure"
+    },
+    "medium": {
+      "description": "Medium urgency scenario",
+      "time_reference": "this week",
+      "approach": "Moderate pressure, create some urgency"
+    },
+    "high": {
+      "description": "High urgency scenario",
+      "time_reference": "today or tomorrow",
+      "approach": "Strong urgency, immediate action needed"
+    }
+  },
+  "customer_psychology": {
+    "dimensions": [
+      "interest",
+      "urgency",
+      "availability",
+      "trust",
+      "commitment"
+    ],
+    "descriptions": {
+      "interest": "Customer's interest level in the product/service",
+      "urgency": "Customer's urgency to make a decision",
+      "availability": "Customer's availability for appointments",
+      "trust": "Customer's trust level in the salesperson/company",
+      "commitment": "Customer's commitment level to purchasing"
+    }
+  },
+  "business_context": {
+    "industry": "Service industry",
+    "product_type": "Appointment-based services",
+    "appointment_duration": "1 hour",
+    "sales_cycle": "1 week"
+  }
+}

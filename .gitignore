@@ -63,6 +63,7 @@ data/
 *.csv
 *.json
 !config.json
+!rl_prompt_engine/configs/*.json
 
 # Jupyter
 .ipynb_checkpoints/

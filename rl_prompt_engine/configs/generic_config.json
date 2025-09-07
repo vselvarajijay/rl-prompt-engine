@@ -1,0 +1,146 @@
+{
+  "max_prompt_length": 6,
+  "max_turns": 10,
+  "prompt_components": {
+    "greeting": {
+      "description": "Initial greeting to the customer",
+      "template": "Hello {first_name}, how can we assist you today?",
+      "effectiveness": 0.9
+    },
+    "needs_assessment": {
+      "description": "Understanding customer needs",
+      "template": "I'd like to understand your specific needs for {product}",
+      "effectiveness": 0.8
+    },
+    "value_proposition": {
+      "description": "Presenting the value proposition",
+      "template": "By choosing {product}, you'll benefit from {benefit}",
+      "effectiveness": 0.8
+    },
+    "objection_handling": {
+      "description": "Responding to customer concerns",
+      "template": "I understand your concern about {concern}, however...",
+      "effectiveness": 0.8
+    },
+    "urgency_creation": {
+      "description": "Creating urgency",
+      "template": "This offer is only available {time_reference}",
+      "effectiveness": 0.7
+    },
+    "social_proof": {
+      "description": "Providing social proof",
+      "template": "Many customers like you have found success with {product}",
+      "effectiveness": 0.7
+    },
+    "incentive_offering": {
+      "description": "Offering incentives",
+      "template": "We're offering {incentive} for {time_reference}",
+      "effectiveness": 0.8
+    },
+    "call_to_action": {
+      "description": "Clear call to action",
+      "template": "Would you like to {action} {time_reference}?",
+      "effectiveness": 0.9
+    },
+    "reassurance": {
+      "description": "Reassuring the customer",
+      "template": "We understand this is important, and we're here to support you",
+      "effectiveness": 0.7
+    },
+    "follow_up": {
+      "description": "Following up with the customer",
+      "template": "I'll follow up with you {time_reference} to see how things are going",
+      "effectiveness": 0.8
+    }
+  },
+  "context_types": {
+    "new_customer": {
+      "description": "A new customer who has never used our service before",
+      "tone": "Friendly, patient, reassuring",
+      "approach": "Educate about the product, provide guidance and assurance",
+      "preferred_components": ["greeting", "needs_assessment", "reassurance"]
+    },
+    "returning_customer": {
+      "description": "A customer who has used our service before",
+      "tone": "Professional, efficient, familiar",
+      "approach": "Build on previous experience, highlight improvements",
+      "preferred_components": ["greeting", "value_proposition", "incentive_offering"]
+    },
+    "price_sensitive": {
+      "description": "A customer who is very focused on getting the best deal",
+      "tone": "Professional, factual, value-focused",
+      "approach": "Highlight value, discuss pricing options",
+      "preferred_components": ["value_proposition", "objection_handling", "incentive_offering"]
+    },
+    "premium_customer": {
+      "description": "A customer who values quality and is less price-sensitive",
+      "tone": "Professional, sophisticated, exclusive",
+      "approach": "Emphasize quality, exclusivity, and premium features",
+      "preferred_components": ["value_proposition", "social_proof", "call_to_action"]
+    },
+    "urgent_customer": {
+      "description": "A customer who needs immediate assistance",
+      "tone": "Professional, efficient, urgent",
+      "approach": "Provide quick solutions, minimize friction",
+      "preferred_components": ["greeting", "urgency_creation", "call_to_action"]
+    },
+    "skeptical_customer": {
+      "description": "A customer who is hard to convince and needs lots of proof",
+      "tone": "Patient, factual, evidence-based",
+      "approach": "Provide evidence, address concerns, build trust",
+      "preferred_components": ["needs_assessment", "objection_handling", "social_proof", "reassurance"]
+    }
+  },
+  "conversation_stages": {
+    "opening": {
+      "description": "Initial contact with the customer",
+      "goals": ["Establish rapport", "Identify customer type"],
+      "preferred_components": ["greeting", "needs_assessment"]
+    },
+    "exploration": {
+      "description": "Understanding the customer's needs and preferences",
+      "goals": ["Identify requirements", "Assess urgency level"],
+      "preferred_components": ["needs_assessment", "value_proposition"]
+    },
+    "presentation": {
+      "description": "Presenting solutions and options",
+      "goals": ["Match solution to needs", "Highlight benefits"],
+      "preferred_components": ["value_proposition", "social_proof"]
+    },
+    "negotiation": {
+      "description": "Addressing concerns and negotiating terms",
+      "goals": ["Handle objections", "Find common ground"],
+      "preferred_components": ["objection_handling", "incentive_offering"]
+    },
+    "closing": {
+      "description": "Finalizing the deal",
+      "goals": ["Close the deal", "Ensure satisfaction"],
+      "preferred_components": ["call_to_action", "urgency_creation"]
+    },
+    "follow_up": {
+      "description": "Post-deal follow-up",
+      "goals": ["Ensure satisfaction", "Build relationship"],
+      "preferred_components": ["follow_up", "reassurance"]
+    }
+  },
+  "urgency_levels": {
+    "low": {
+      "description": "Low urgency scenario",
+      "time_reference": "when convenient",
+      "approach": "Patient, no pressure",
+      "preferred_components": ["greeting", "needs_assessment", "value_proposition"]
+    },
+    "medium": {
+      "description": "Medium urgency scenario",
+      "time_reference": "this week",
+      "approach": "Balanced, some urgency",
+      "preferred_components": ["value_proposition", "urgency_creation", "call_to_action"]
+    },
+    "high": {
+      "description": "High urgency scenario",
+      "time_reference": "today or tomorrow",
+      "approach": "Urgent, action-oriented",
+      "preferred_components": ["urgency_creation", "call_to_action", "incentive_offering"]
+    }
+  }
+}
